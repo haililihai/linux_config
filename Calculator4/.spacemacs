@@ -313,9 +313,36 @@ you should place your code here."
 ;;     (s-font))
   
 ;; here goes your Org config :)
-(add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
-;; (setq org-todo-keywords
-;;       '(sequence "TODO(t!)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)"))
+;; truncate lines
+  (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+  ;; define my own todo keywords
+  (setq org-todo-keywords
+        '((sequence "TODO(t!)" "WAIT(w!)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
+  ;; default org directory
+  (setq org-directory "~/org/")
+  (setq org-agenda-files (list org-directory))
+  (setq org-default-notes-file (concat org-directory "inbox.org"))
+  (setq org-archive-location (concat (concat org-directory "archive.org") "::datetree/"))
+  ;; refile across files
+  (setq org-refile-targets (quote (("task.org" :maxlevel . 1)
+                                   ("project.org" :maxlevel . 1)
+                                   ("note.org" :maxlevel . 1))))
+  ;; capture-templates
+  (setq org-capture-templates
+        '(("b" "inBox" entry (file (concat org-directory "inbox.org"))
+           "* %?\n %T\n %a")
+          ("t" "TODO" entry (file+headline (concat org-directory "task.org") "Tasks")
+           "** TODO [#B] %?\n %T\n %a")
+          ("c" "Calendar" entry (file+headline (concat org-directory "task.org") "Calendar")
+           "** %?\n %^T\n %^{Venue}p\n %a")
+          ("i" "Idea" entry (file+headline (concat org-directory "task.org") "Ideas")
+             "** %?\n %T\n %a")
+          ("n" "Note" entry (file (concat org-directory "note.org"))
+           "** %?\n %T\n %a")
+          ("p" "Project" entry (file (concat org-directory "project.org"))
+           "* %?\n %T\n %a")      
+          ))
+
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

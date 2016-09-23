@@ -7,9 +7,7 @@
 You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
-   ;; Base distribution to use. This is a layer contained in the directory
-   ;; `+distribution'. For now available distributions are `spacemacs-base'
-   ;; or `spacemacs'. (default 'spacemacs)
+   ;; Base distribution to use. This is a layer contained in the directorypacemacs'. (default 'spacemacs)
    dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
@@ -303,7 +301,35 @@ you should place your code here."
   ;;  (setq face-font-rescale-alist '(("Dejavu Sans" . 1.0) ("Microsoft YaHei" . 1.23)))
 
   ;; here goes your Org config
+  ;; truncate lines
   (add-hook 'org-mode-hook (lambda () (setq truncate-lines nil)))
+  ;; define my own todo keywords
+  (setq org-todo-keywords
+        '((sequence "TODO(t!)" "WAIT(w!)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
+  ;; default org directory
+  (setq org-directory "D:/org/")
+  (setq org-agenda-files (list org-directory))
+  (setq org-default-notes-file (concat org-directory "inbox.org"))
+  (setq org-archive-location (concat (concat org-directory "archive.org") "::datetree/"))
+  ;; refile across files
+  (setq org-refile-targets (quote (("task.org" :maxlevel . 1)
+                                   ("project.org" :maxlevel . 1)
+                                   ("note.org" :maxlevel . 1))))
+  ;; capture-templates
+  (setq org-capture-templates
+        '(("b" "inBox" entry (file (concat org-directory "inbox.org"))
+           "* %?\n %T\n %a")
+          ("t" "TODO" entry (file+headline (concat org-directory "task.org") "Tasks")
+           "** TODO [#B] %?\n %T\n %a")
+          ("c" "Calendar" entry (file+headline (concat org-directory "task.org") "Calendar")
+           "** %?\n %^T\n %^{Venue}p\n %a")
+          ("i" "Idea" entry (file+headline (concat org-directory "task.org") "Ideas")
+             "** %?\n %T\n %a")
+          ("n" "Note" entry (file (concat org-directory "note.org"))
+           "** %?\n %T\n %a")
+          ("p" "Project" entry (file (concat org-directory "project.org"))
+           "* %?\n %T\n %a")      
+          ))
  )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -356,6 +382,9 @@ you should place your code here."
  '(nrepl-message-colors
    (quote
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(org-agenda-files
+   (quote
+    ("d:/org/task.org" "d:/org/inbox.org" "d:/org/todo.org" "d:/org/note.org")))
  '(package-selected-packages
    (quote
     (rainbow-mode rainbow-identifiers visual-fill-column org-cliplink avy-zap sublime-theme pangu-spacing find-by-pinyin-dired chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib ace-jump-mode helm chinese-fonts-setup toc-org org-repo-todo org-present org-pomodoro alert log4e gntp org-plus-contrib org-bullets htmlize helm-company helm-c-yasnippet gnuplot company-statistics company-quickhelp pos-tip company auto-yasnippet yasnippet ac-ispell auto-complete zenburn-theme monokai-theme solarized-theme ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe use-package spacemacs-theme spaceline smooth-scrolling restart-emacs rainbow-delimiters quelpa popwin persp-mode pcre2el paradox page-break-lines open-junk-file neotree move-text macrostep lorem-ipsum linum-relative leuven-theme info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu elisp-slime-nav define-word clean-aindent-mode buffer-move bracketed-paste auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
